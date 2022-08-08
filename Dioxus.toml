@@ -1,7 +1,7 @@
 [application]
 
 # dioxus project name
-name = "dioxus-starter"
+name = "dioxus-hackernews"
 
 # default platfrom
 # you can also use `dioxus serve/build --platform XXX` to use other platform
@@ -17,7 +17,7 @@ asset_dir = "public"
 [web.app]
 
 # HTML title tag content
-title = "Dioxus Starter | opinionated dioxus template"
+title = "HackerNews | Built with Dioxus"
 
 [web.watcher]
 

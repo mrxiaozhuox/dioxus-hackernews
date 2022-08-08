@@ -4,11 +4,10 @@ use dioxus::prelude::*;
 use dioxus_toast::{ToastFrame, ToastManager};
 
 mod components;
-mod hooks;
 mod pages;
+mod api;
 
-use hooks::mode::init_mode_info;
-use pages::starter::{About, HelloDioxus, SayHi};
+use crate::{components::nav::Navbar, pages::news::NewsPage};
 
 static TOAST_MANAGER: dioxus::fermi::AtomRef<ToastManager> = |_| ToastManager::default();
 
@@ -20,7 +19,6 @@ fn main() {
 
 fn App(cx: Scope) -> Element {
     // init mode information
-    init_mode_info(&cx);
     cx.render(rsx! {
         // dioxus toast manager init
         ToastFrame {
@@ -29,20 +27,22 @@ fn App(cx: Scope) -> Element {
         }
         // dioxus router info
         Router {
-            Route {
-                to: "/",
-                HelloDioxus {}
+            Navbar {}
+            div {
+                class: "container mx-auto",
+                Route {
+                    to: "/",
+                    Redirect { to: "/news/1" }
+                }
+                Route {
+                    to: "/news/:page",
+                    NewsPage {}
+                }
+                Route {
+                    to: "",
+                    pages::_404::NotFound {}
+                }
             }
-            Route {
-                to: "/hi/:name",
-                SayHi {}
-            }
-            Route {
-                to: "/about",
-                About {}
-            }
-            // 404 page
-            Route { to: "", pages::_404::NotFound {} }
         }
     })
 }

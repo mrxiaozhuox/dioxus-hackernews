@@ -1,7 +1,5 @@
 use dioxus::prelude::*;
 
-use crate::components::footer::Footer;
-
 pub fn NotFound(cx: Scope) -> Element {
     cx.render(rsx! {
         section {
@@ -14,7 +12,6 @@ pub fn NotFound(cx: Scope) -> Element {
                         class: "text-3xl sm:text-5xl capitalize tracking-widest dark:text-white lg:text-6xl",
                         "Page Not Found"
                     }
-                    Footer {}
                 }
             }
         }

@@ -1,2 +1,2 @@
 pub mod _404;
-pub mod starter;
+pub mod news;
