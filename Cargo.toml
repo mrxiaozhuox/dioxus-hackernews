@@ -18,3 +18,4 @@ anyhow = "1.0.57"
 urlencoding = "2.1.0"
 dioxus-use-storage = { git = "https://github.com/oovm/dioxus-hooks" }
 reqwasm = "0.5.0"
+serde = { version = "1.0.143", features = ["derive"] }

@@ -1,5 +1,4 @@
 pub use dioxus::prelude::*;
-use dioxus_free_icons::{icons::fa_solid_icons, Icon};
 
 pub fn Navbar(cx: Scope) -> Element {
     cx.render(rsx! {
