@@ -12,9 +12,12 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
     let page = use_route(&cx).segment("page").unwrap_or("1");
     let page = page.parse::<usize>().unwrap_or(1);
 
+    let state_page = use_state(&cx, || 1_usize);
+
     let current_list = cx.consume_context::<LoadedInfo>().unwrap();
     let current_list = current_list.from_str(&name);
     let current_list = split_page(current_list, page);
+
     let res = use_future(&cx, (), |_| async move {
         let mut list = vec![];
         for id in current_list {
@@ -28,10 +31,12 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
 
     match res.value() {
         Some(data) => {
+
             let display_list = data.iter().map(|v| {
                 rsx! {
                     li {
                         class: "px-6 py-2 border-b border-gray-200 w-full",
+                        key: "{v.id}",
                         div {
                             class: "flex justify-start gap-2",
                             div {
@@ -86,7 +91,15 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
                     }
                 }
             })
-        },
-        None => None,
+        }
+        None => cx.render(rsx! {
+            div {
+                class: "flex justify-center",
+                h2 {
+                    class: "text-2xl font-bold",
+                    "Loading..."
+                }
+            }
+        }),
     }
 }

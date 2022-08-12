@@ -15,7 +15,7 @@ pub async fn get_list(name: &str) -> Vec<u64> {
     resp.json::<Vec<u64>>().await.unwrap_or_default()
 }
 
-#[derive(Deserialize)]
+#[derive(Debug, Deserialize, PartialEq)]
 pub struct Item {
     pub id: u64,
     pub by: String,

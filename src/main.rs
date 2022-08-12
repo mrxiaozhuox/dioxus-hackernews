@@ -59,7 +59,7 @@ fn App(cx: Scope) -> Element {
                     showstories: data[2].clone(),
                     jobstories: data[3].clone(),
                 };
-                log::info!("Loaded Info: {:?}", list);
+                // log::info!("Loaded Info: {:?}", list);
                 cx.provide_context(list);
             });
 
