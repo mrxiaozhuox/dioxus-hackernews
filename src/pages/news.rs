@@ -12,8 +12,6 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
     let page = use_route(&cx).segment("page").unwrap_or("1");
     let page = page.parse::<usize>().unwrap_or(1);
 
-    let state_page = use_state(&cx, || 1_usize);
-
     let current_list = cx.consume_context::<LoadedInfo>().unwrap();
     let current_list = current_list.from_str(&name);
     let current_list = split_page(current_list, page);
