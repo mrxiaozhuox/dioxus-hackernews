@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::{
-    api::{get_item, split_page},
+    api::{get_item, split_page, max_page_num},
     components::nav::Pagination,
     LoadedInfo,
 };
@@ -14,9 +14,10 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
 
     let current_list = cx.consume_context::<LoadedInfo>().unwrap();
     let current_list = current_list.from_str(&name);
+    let max_page_num = max_page_num(current_list.clone());
     let current_list = split_page(current_list, page);
 
-    let res = use_future(&cx, (), |_| async move {
+    let res = use_future(&cx, &page, |_| async move {
         let mut list = vec![];
         for id in current_list {
             let res = get_item(id).await;
@@ -27,9 +28,8 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
         list
     });
 
-    match res.value() {
-        Some(data) => {
-
+    match res.state() {
+        UseFutureState::Complete(data) => {
             let display_list = data.iter().map(|v| {
                 rsx! {
                     li {
@@ -76,7 +76,7 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
                         p {
                             class: "text-gray-900 leading-tight font-medium mb-2",
                             Pagination {
-                                max_page_num: 10,
+                                max_page_num: max_page_num,
                             }
                         }
                         div {
@@ -90,12 +90,35 @@ pub fn ListShow<'a>(cx: Scope, name: &'a str) -> Element {
                 }
             })
         }
-        None => cx.render(rsx! {
+        UseFutureState::Reloading(_) => {
+            cx.render(rsx! {
+                div {
+                    class: "flex justify-center",
+                    div {
+                        class: "block p-6 rounded-lg shadow-lg bg-white w-full",
+                        p {
+                            class: "text-gray-900 leading-tight font-medium mb-2",
+                            Pagination {
+                                max_page_num: max_page_num,
+                            }
+                        }
+                        div {
+                            class: "flex justify-center",
+                            h2 {
+                                class: "text-xl font-semibold",
+                                "loading..."
+                            }
+                        }
+                    }
+                }  
+            })
+        }
+        UseFutureState::Pending => cx.render(rsx! {
             div {
                 class: "flex justify-center",
                 h2 {
                     class: "text-2xl font-bold",
-                    "Loading..."
+                    "loading..."
                 }
             }
         }),

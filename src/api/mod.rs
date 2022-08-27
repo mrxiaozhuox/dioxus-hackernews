@@ -46,3 +46,12 @@ pub fn split_page(full: Vec<u64>, current_page: usize) -> Vec<u64> {
     let start = ONE_PAGE_ITEM_NUM * current_page;
     full[(start - ONE_PAGE_ITEM_NUM)..start].to_vec()
 }
+
+pub fn max_page_num(full: Vec<u64>) -> usize {
+    let t = full.len() as f32 % ONE_PAGE_ITEM_NUM as f32;
+    if t > 0.0 {
+        full.len() / ONE_PAGE_ITEM_NUM + 1
+    } else {
+        full.len() / ONE_PAGE_ITEM_NUM
+    }
+}
